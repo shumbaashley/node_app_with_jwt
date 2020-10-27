@@ -10,9 +10,12 @@ const app = express()
 app.use(express.json())
 
 const authRouter = require('./routes/auth')
+const usersRouter = require('./routes/users/users')
 
 // Route Middlewares
 app.use('/api/user', authRouter)
+app.use('/api/users', usersRouter)
+
 
 // Connect to DB
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true } ,()=> console.log("Connected to DB..."))
