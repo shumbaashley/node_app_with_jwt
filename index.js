@@ -16,7 +16,7 @@ const authRouter = require('./routes/auth')
 const usersRouter = require('./routes/users/users')
 
 // Route Middlewares
-app.use('/api/user', authRouter)
+app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 
 
