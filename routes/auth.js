@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router()
 const bcrypt = require('bcryptjs');
+const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const { registerValidation, loginValidation } = require('../validation')
 const User = require('../models/User')
@@ -17,6 +18,13 @@ router.post('/register', async (req,res)=>{
     const emailExist = await User.findOne({email : req.body.email})
     if(emailExist) return res.status(400).send("Email already exists")
 
+    // Get user's avatar
+    const avatar = gravatar.url(req.body.email, {
+        s : '200',
+        r : 'pg',
+        d : 'mm'
+    }) 
+
     // Hash Password
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(req.body.password, salt)
@@ -24,7 +32,9 @@ router.post('/register', async (req,res)=>{
 
     const user = new User({
         name : req.body.name,
+        username : req.body.username,
         email :req.body.email,
+        avatar : avatar,
         password : hashedPassword
     })
 
@@ -57,6 +67,7 @@ router.post('/login', async (req,res)=>{
     const token = await jwt.sign({
         id : user.id,
         name : user.name,
+        username : user.username,
         email : user.email
     }, process.env.TOKEN_SECRET)
 

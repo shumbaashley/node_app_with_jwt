@@ -13,12 +13,13 @@ app.use(cors())
 
 
 const authRouter = require('./routes/auth')
-const usersRouter = require('./routes/users/users')
+const usersRouter = require('./routes/users')
+const profileRouter = require('./routes/profile')
 
 // Route Middlewares
 app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
-
+app.use('/api/profile', profileRouter)
 
 // Connect to DB
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true } ,()=> console.log("Connected to DB..."))

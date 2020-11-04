@@ -7,6 +7,12 @@ const userSchema = mongoose.Schema({
         min:3,
         max : 255
     },
+    "username" : {
+        type : String,
+        required : true,
+        min:3,
+        max : 255
+    },
     "email" : {
         type : String,
         required : true,
@@ -18,6 +24,13 @@ const userSchema = mongoose.Schema({
         required : true,
         min: 8,
         max : 1024
+    },
+    avatar : {
+        type : String
+    }, 
+    date : {
+        type : Date,
+        default :Date.now
     }
 })
 

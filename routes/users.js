@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const { findOneAndUpdate, updateOne } = require('../../models/User');
-const User = require('../../models/User');
-const verify = require('../verifyToken')
+const User = require('../models/User');
+const verify = require('./verifyToken')
 
 // Get all users
 router.get('/', verify , async (req, res) => {
@@ -36,6 +35,17 @@ router.put('/:userId', verify , async (req, res) => {
     } catch (error) {
         res.status(500).json(error)
     }
+})
+
+// Delete a user 
+router.delete('/me', verify , async (req, res) => {
+    try {
+        const user = await User.deleteOne({_id : req.user.id })
+        res.json("User  successfully deleted")
+    } catch (error) {
+        res.status(500).send(error)
+    }
+
 })
 
 module.exports = router
