@@ -10,13 +10,13 @@ router.get('/me', verify, async (req, res) => {
         const profile = await Profile.findOne({ user : req.user.id }).populate('User', ['name', 'username', 'avatar', 'email']) 
 
         if(!profile){
-            return res.status(404).json("There is no profile for this user")
+            return res.status(404).json({"message" : "There is no profile for this user"})
         }
 
         return res.json(profile)
 
     } catch (error) {
-        res.json("There was some error")
+        res.json({"message" : "There was some error"})
     }
 })   
  
@@ -25,7 +25,7 @@ router.post('/', verify, async (req, res) => {
 
     // Validate Data 
     const { error } = profileValidation(req.body)
-    if(error) return res.status(400).send(error.details[0].message)
+    if(error) return res.status(400).send({"message" : error.details[0].message})
 
     // Turn Skills into array
 
@@ -33,7 +33,7 @@ router.post('/', verify, async (req, res) => {
 
         // find if profile exists
         const profile = await Profile.findOne({ user : req.user.id })
-        if(profile) return res.status(400).json("This user's profile already exists")
+        if(profile) return res.status(400).json({"message" : "This user's profile already exists"})
 
         const skills = req.body.skills
 
@@ -50,10 +50,10 @@ router.post('/', verify, async (req, res) => {
 
         await newProfile.save()
  
-        return res.status(201).json("Profile created successfully")
+        return res.status(201).json({"message" : "Profile created successfully"})
 
     } catch (error) {
-        res.status(500).json("There was some error")
+        res.status(500).json({"message" : "There was some error"})
     }
 })
 
@@ -72,13 +72,13 @@ router.put('', verify, async (req, res) => {
 
     // Validate Data 
     const { error } = profileValidation(req.body)
-    if(error) return res.status(400).send(error.details[0].message)
+    if(error) return res.status(400).send({"message" : error.details[0].message})
     // Turn Skills into array
 
     try {
         // find if profile exists
         const profile = await Profile.findOne({ user : req.user.id })
-        if(!profile) return res.status(404).json("This user's profile does not exists")
+        if(!profile) return res.status(404).json({"message" : "This user's profile does not exists"})
 
         const { company, website, skills , bio, location} = req.body
  
@@ -96,10 +96,10 @@ router.put('', verify, async (req, res) => {
             {$set : profileDetails},
             {new : true}
         )
-         res.status(200).json("Profile updated successfully")
+         res.status(200).json({"message" : "Profile updated successfully"})
 
     } catch (error) {
-         res.status(500).send(error)
+         res.status(500).send({"message" : "Server error"})
     }
 })
 
@@ -108,13 +108,13 @@ router.patch('', verify, async (req, res) => {
 
     // Validate Data 
     const { error } = profileValidation(req.body)
-    if(error) return res.status(400).send(error.details[0].message)
+    if(error) return res.status(400).send({"message" : error.details[0].message})
     // Turn Skills into array
 
     try {
         // find if profile exists
         const profile = await Profile.findOne({ user : req.user.id })
-        if(!profile) return res.status(404).json("This user's profile does not exists")
+        if(!profile) return res.status(404).json({"message" : "This user's profile does not exists"})
 
         const { company, website, skills , bio, location} = req.body
  
@@ -132,10 +132,10 @@ router.patch('', verify, async (req, res) => {
             {$set : profileDetails},
             {new : true}
         )
-         res.status(200).json("Profile updated successfully")
+         res.status(200).json({"message" : "Profile updated successfully"})
 
     } catch (error) {
-         res.status(500).send(error)
+         res.status(500).send({"message" : "Server error" })
     }
 })
 
@@ -146,12 +146,12 @@ router.get('/:id', verify, async (req, res) => {
     try {
         // find if profile exists
         const profile = await Profile.findOne({ _id : req.params.id })
-        if(!profile) return res.status(404).json("This user's profile does not exists")
+        if(!profile) return res.status(404).json({"message" : "This user's profile does not exists"})
 
          res.status(200).json(profile)
 
     } catch (error) {
-         res.status(500).send(error)
+         res.status(500).send({"message" : "Sever error"})
     }
 })
 
@@ -163,13 +163,13 @@ router.delete('/:id', verify, async (req, res) => {
     try {
         // find if profile exists
         const profile = await Profile.findOne({ _id : req.params.id })
-        if(!profile) return res.status(404).json("This user's profile does not exists")
+        if(!profile) return res.status(404).json({"message" : "This user's profile does not exists"})
 
         await Profile.deleteOne({ _id : req.params.id })
-         res.status(200).json("Profile deleted successfully")
+         res.status(200).json({"message" : "Profile deleted successfully"})
 
     } catch (error) {
-         res.status(500).send(error)
+         res.status(500).send({ "message" : "Server error"})
     }
 })
 
