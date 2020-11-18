@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const User = require('../models/User');
+const Profile = require('../models/Profile')
 const verify = require('./verifyToken')
 
 // Get all users
@@ -40,11 +41,12 @@ router.put('/:userId', verify , async (req, res) => {
 // Delete a user 
 router.delete('/me', verify , async (req, res) => {
     try {
-        const user = await User.deleteOne({_id : req.user.id })
-        res.json("User  successfully deleted")
+        await Profile.deleteOne({ user : req.user.id })
+        await User.deleteOne({_id : req.user.id })
+        res.json({message : "User Account successfully deleted"})
     } catch (error) {
-        res.status(500).send(error)
-    }
+        res.status(500).send({message : "Server error"})
+    } 
 
 })
 

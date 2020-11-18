@@ -60,10 +60,10 @@ router.post('/', verify, async (req, res) => {
 // Get all profiles 
 router.get('/',  verify , async (req,res) =>{
     try {
-        const profiles = await Profile.find()
-        return res.json(profiles)
+        const profiles = await Profile.find().populate('user', ['name', 'avatar'])
+        return res.status(200).send(profiles)
     } catch (error) {
-        res.status(500).json(error)
+        return res.status(500).send({"message" : "Server error"})
     }
 })
  
@@ -151,7 +151,24 @@ router.get('/:id', verify, async (req, res) => {
          res.status(200).json(profile)
 
     } catch (error) {
-         res.status(500).send({"message" : "Sever error"})
+         res.status(500).send({"message" : "Server error"})
+    }
+})
+
+
+// Get user profile by userId
+router.get('/user/:userId', verify, async (req, res) => {
+
+
+    try {
+        // find if profile exists
+        const profile = await Profile.findOne({ user: req.params.userId }).populate('user', ['name', 'avatar'])
+        if(!profile) return res.status(404).json({"message" : "This user's profile does not exists"})
+
+         res.status(200).json(profile)
+
+    } catch (error) {
+         res.status(500).send({"message" : "Server error"})
     }
 })
 
