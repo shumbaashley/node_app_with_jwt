@@ -4,6 +4,7 @@ const User = require('../models/User')
 const auth = require('./verifyToken')
 const { postValidation, commentValidation } = require('../validation')
 
+ 
 // Create a new post
 router.post('/', auth, async (req , res) => {
     // Validate post data
@@ -22,7 +23,7 @@ router.post('/', auth, async (req , res) => {
     })
 
     const post = await postDetails.save() 
-    return res.status(201).send(post)
+    return res.status(201).send({"message" : "Post created"})
    } catch (error) {
     return res.status(500).send("Server error")       
    }
@@ -38,7 +39,7 @@ router.get('/', auth, async (req , res) => {
     } catch (error) {
         return res.status(500).send("Server error")       
     }
-
+ 
 })
 
 // Get individual post by id
@@ -190,5 +191,27 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) =>{
         return res.status(500).send("Server error")
     }
 })
+
+
+// Delete a comment
+router.delete('/:id', auth, async (req, res) =>{
+    try {
+        const post = await Post.findById(req.params.id)
+        if(!post) return res.status(404).send("Post could not be found!")
+
+        
+        post.deleteOne({_id : req.params.id})
+        await post.save()
+        return res.json({"message" : "Post deleted"})
+
+
+    } catch (error) {
+        if(error.kind === 'ObjectId'){
+            return res.status(404).send("This post does not exist")
+        }
+        return res.status(500).send("Server error")
+    }
+})
+
 
 module.exports = router

@@ -13,8 +13,7 @@ const PostSchema = mongoose.Schema({
         type: String
     },
     title : {
-        type : String,
-        required : true,
+        type : String, 
     },
     text : {
         type : String,

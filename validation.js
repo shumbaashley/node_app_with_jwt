@@ -53,3 +53,4 @@ module.exports.registerValidation = registerValidation
 module.exports.loginValidation = loginValidation
 module.exports.profileValidation = profileValidation
 module.exports.commentValidation = commentValidation
+module.exports.postValidation = postValidation
